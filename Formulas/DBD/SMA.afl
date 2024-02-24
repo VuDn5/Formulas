@@ -1,0 +1,34 @@
+_SECTION_BEGIN("Strade_CandleStick"); 
+UpClose = Close - Ref(Close,-1); 
+Color = IIf(UpClose > 0, colorGreen, colorRed); 
+PlotOHLC(Open,High,Low,Close,"", Color, styleCandle); 
+_SECTION_END();
+Plot(MA( C, 9 ),"MA9",colorBlue,styleLine);
+Plot(MA( C, 13 ),"MA13",colorGreen,styleLine);
+Plot(MA( C, 20 ),"MA20",colorRed,styleLine);
+Plot(MA( C, 50 ),"MA50",colorCustom12,styleLine|styleThick);
+Plot(MA( C, 200 ),"MA200",colorCustom9,styleThick);
+
+
+
+MA9 = MA(C,9);
+MA13 = MA(C,13);
+
+Cover = Cross(MA9, MA13);
+Short = Cross(MA13, MA9);
+shape = Cover * shapeUpArrow + Short * shapeDownArrow;
+
+PlotShapes( shape, IIf( Cover, colorCustom12, colorCustom12 ), 0, IIf( Cover, Low, High ) );
+
+
+_SECTION_BEGIN("Bollinger Bands");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 20, 2, 300, 1 );
+Width = Param("Width", 2, 0, 10, 0.05 );
+Color = ParamColor("Color", colorCustom1 );
+Style = ParamStyle("Style");
+Plot( BBandTop( P, Periods, Width ), "BBTop" + _PARAM_VALUES(), Color, style ); 
+Plot( BBandBot( P, Periods, Width ), "BBBot" + _PARAM_VALUES(), Color, Style ); 
+
+_SECTION_END();
+

@@ -1,0 +1,23 @@
+_SECTION_BEGIN("ADX");
+
+range = Param("Periods", 14, 2, 200, 1 );
+Plot( LL = ADX(range), _DEFAULT_NAME(), ParamColor( "Color", colorCustom6 ),styleDots);
+
+Plot( SL = PDI(range), "+DI", ParamColor( "+DI color", colorBlue ), ParamStyle("+DI style") );
+Plot( ML = MDI(range), "-DI", ParamColor( "-DI color", colorRed ), ParamStyle("-DI style") );
+
+Buy = Cross( SL, ML );
+Sell = Cross( ML, SL );
+PlotShapes(IIf(Buy,shapeUpArrow,shapeNone) ,colorBlue);
+PlotShapes(IIf(Sell,shapeDownArrow,shapeNone),colorRed);
+
+Cover = Cross( SL, LL );
+Short = Cross( LL, SL );
+PlotShapes(IIf(Cover,shapeUpArrow,shapeNone) ,colorCustom12);
+PlotShapes(IIf(Short,shapeDownArrow,shapeNone),colorCustom12);
+
+Cover = Cross( LL, ML );
+Short = Cross( ML, LL );
+PlotShapes(IIf(Cover,shapeUpArrow,shapeNone) ,colorCustom12);
+PlotShapes(IIf(Short,shapeDownArrow,shapeNone),colorCustom12);
+

@@ -1,0 +1,34 @@
+_SECTION_BEGIN("Strade_CandleStick"); 
+UpClose = Close - Ref(Close,-1); 
+Color = IIf(UpClose > 0, colorGreen, colorRed); 
+PlotOHLC(Open,High,Low,Close,"", Color, styleCandle); 
+_SECTION_END();
+Plot(WMA( C, 9 ),"WMA9",colorBlue,styleLine);
+Plot(WMA( C, 13 ),"WMA13",colorGreen,styleLine);
+Plot(WMA( C, 20 ),"WMA20",colorRed,styleLine);
+Plot(WMA( C, 50 ),"WMA50",colorCustom12,styleLine|styleThick);
+Plot(WMA( C, 200 ),"WMA200",colorCustom9,styleThick);
+
+
+
+WMA9 = WMA(C,9);
+WMA13 = WMA(C,13);
+
+Cover = Cross(WMA9, WMA13);
+Short = Cross(WMA13, WMA9);
+shape = Cover * shapeUpArrow + Short * shapeDownArrow;
+
+PlotShapes( shape, IIf( Cover, colorCustom12, colorCustom12 ), 0, IIf( Cover, Low, High ) );
+
+Title= "WMA " + " - "  +  EncodeColor(colorRed)+ Name()+" - Date : "+Date() + " - " +" O = "+WriteVal(O)+", H = "+WriteVal(H)+", L = "+WriteVal(L)+", C = "+WriteVal(C)+" Volume : "+WriteVal(V);
+
+_SECTION_BEGIN("Bollinger Bands");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 20, 2, 300, 1 );
+Width = Param("Width", 2, 0, 10, 0.05 );
+Color = ParamColor("Color", colorCustom1 );
+Style = ParamStyle("Style");
+Plot( BBandTop( P, Periods, Width ), "BBTop" + _PARAM_VALUES(), Color, style ); 
+Plot( BBandBot( P, Periods, Width ), "BBBot" + _PARAM_VALUES(), Color, Style ); 
+
+_SECTION_END();

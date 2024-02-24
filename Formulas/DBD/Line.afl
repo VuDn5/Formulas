@@ -1,0 +1,6 @@
+_SECTION_BEGIN("PRICE");
+// simple trading system
+
+Plot(C,"",IIf(C>Ref(C,-1),colorRed,colorRed),styleDots|styleThick);
+Title= "PRICE LINE"+ " - "  +  EncodeColor(colorGreen)+ Name()+" - Date : "
++Date() + " - " +" O = "+WriteVal(O)+", H = "+WriteVal(H)+", L = "+WriteVal(L)+", C = "+WriteVal(C)+" Volume : "+WriteVal(V);

@@ -1,0 +1,38 @@
+_SECTION_BEGIN("MCDX");
+function  rsi_function(sensitivity, rsiPeriod, rsiBase) 
+{
+    rsi1 = Null;
+	rsi1 = sensitivity * (rsi(rsiPeriod) - rsiBase);
+	
+	for( i = 0; i < BarCount; i++ ) 
+	{ 
+		if (rsi1[i] > 20) rsi1[i] = 20;
+		else if (rsi1[i] < 0) rsi1[i] = 0;
+	}
+	return rsi1;
+}
+
+RequestTimedRefresh( 1 );
+
+PC = StaticVarGet("PC" );
+PC = IIf(IsNull(PC), C, PC);
+RSIBaseBanker       = Param("Banker Base",50,10,100,1,0);
+RSIPeriodBanker     = Param ("Banker RSI Period", 50, 10, 100,1,0);
+RSIBaseHotMoney     = Param("Hot Money RSI Base", 30,10,100,1,0);
+RSIPeriodHotMoney   = Param("Hot Money RSI Period", 40,10,100,1,0);
+SensitivityBanker   = Param("Sensitivity Banker", 1.5, 0.1,10, 0.1,0);
+SensitivityHotMoney = Param("Sensitivity Hot Money", 0.7, 0.1, 10, 0.1,0);
+
+mcdx_Retailer = 20;
+mcdx_Banker   = rsi_function(SensitivityBanker,RSIPeriodBanker,RSIBaseBanker);
+mcdx_HotMoney = rsi_function(SensitivityHotMoney,RSIPeriodHotMoney,RSIBaseHotMoney);
+
+BankerColor = ParamColor("Banker color", colorRed);
+HotMoneyColor = ParamColor("HotMoney color", colorYellow);
+RetailerColor = ParamColor("Retailer color", colorGreen);
+
+Plot(mcdx_Banker,"Banker", BankerColor , styleHistogram, minvalue=0, maxvalue = 20, XShift = 0, Zorder = 0, width = 10 );
+Plot(mcdx_HotMoney,"Hot Money", HotMoneyColor , styleHistogram, minvalue=0, maxvalue = 20, XShift = 0, Zorder = 0, width = 10 );
+Plot(mcdx_Retailer,"Retailer", RetailerColor , styleHistogram, minvalue=0, maxvalue = 20, XShift = 0, Zorder = 0, width = 10 );
+
+_SECTION_END();

@@ -1,0 +1,15 @@
+wc = TimeFrameCompress( Close, inWeekly );
+
+/* now the time frame is still unchanged (say daily) and our MA will operate on daily data */
+
+dailyma = MA( C, 14 );
+
+/* but if we call MA on compressed array, it will give MA from other time frame */
+
+weeklyma = MA( wc, 14 ); // note that argument is time-compressed array
+
+Plot( dailyma, "DailyMA", colorRed );
+
+weeklyma = TimeFrameExpand( weeklyma, inWeekly ); // expand for display
+
+Plot( weeklyma, "WeeklyMA", colorBlue );

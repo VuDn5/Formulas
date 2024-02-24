@@ -1,0 +1,10 @@
+periods = Param( "Periods", 14, 1, 200, 1 );
+Plot(SL =  MFI( periods), _DEFAULT_NAME(), colorcustom6, styleDots | styleThick);
+
+
+_SECTION_BEGIN("Stoch Level");
+
+Plot(20,"",ParamColor( "Color", colorCustom1 ), ParamStyle("Style"));
+Plot(50,"",ParamColor( "Color", colorCycle ), styleDashed); 
+Plot(80,"",ParamColor( "Color", colorCustom1 ), ParamStyle("Style"));
+_SECTION_END();

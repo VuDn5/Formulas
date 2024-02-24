@@ -1,0 +1,41 @@
+_SECTION_BEGIN("Strade_CandleStick"); 
+UpClose = Close - Ref(Close,-1); 
+Color = IIf(UpClose > 0, colorGreen, colorRed); 
+PlotOHLC(Open,High,Low,Close,"", Color, styleCandle); 
+_SECTION_END();
+
+Plot(EMA( C, 6 ),"EMA6",colorBlue,styleLine);
+Plot(EMA( C, 10 ),"EMA10",colorGreen,styleLine);
+Plot(EMA( C, 20 ),"EMA20",colorRed,styleLine);
+Plot(EMA( C, 50 ),"EMA50",colorCustom12,styleLine|styleThick);
+Plot(EMA( C, 200 ),"EMA200",colorCustom9,styleThick);
+
+
+EMA6 = EMA(C,6);
+EMA10 = EMA(C,10);
+EMA20 = EMA(C,20);
+
+Cover = Cross(EMA6, EMA10);
+Short = Cross(EMA10, EMA6);
+shape = Cover * shapeUpArrow + Short * shapeDownArrow;
+PlotShapes( shape, IIf( Cover, colorRed, colorRed ), 0, IIf( Cover, Low, High ) );
+
+
+_SECTION_BEGIN("Bollinger Bands");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 20, 2, 300, 1 );
+Width = Param("Width", 2, 0, 10, 0.05 );
+Color = ParamColor("Color", colorTeal );
+Style = ParamStyle("Style");
+Plot( BBandTop( P, Periods, Width ), "BBTop" + _PARAM_VALUES(), Color, style ); 
+Plot( BBandBot( P, Periods, Width ), "BBBot" + _PARAM_VALUES(), Color, Style ); 
+
+_SECTION_BEGIN("SAR");
+acc = Param("Acceleration", 0.02, 0, 1, 0.001 );
+accm = Param("Max. acceleration", 0.2, 0, 1, 0.001 );
+Plot( SAR( acc, accm ), _DEFAULT_NAME(), ParamColor( "Color", colorGrey50 ), ParamStyle("Style", styleDots | styleNoLine, maskDefault | styleDots | styleNoLine ) );
+_SECTION_END();
+
+Title= "EMA "+ " - "  +  EncodeColor(colorRed)+ Name()+" - Date : "
++Date() + " - " +" O = "+WriteVal(O)+", H = "+WriteVal(H)+", L = "+WriteVal(L)+", C = "+WriteVal(C)+" Volume : "+WriteVal(V);
+

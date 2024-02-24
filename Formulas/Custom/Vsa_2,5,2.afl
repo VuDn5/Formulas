@@ -1,0 +1,27 @@
+_SECTION_BEGIN("Ngoc1");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+BarColor=IIf(C>Ref(C,-1),colorGreen,colorRed);
+PlotOHLC( Close,  High,  Low,  Close, "", BarColor, styleBar);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", C, H, L, C, SelectedValue( ROC( C, 1 ) ) ));
+_SECTION_END();
+
+_SECTION_BEGIN("MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 20, 200, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorgrey50 ), ParamStyle("Style", styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+_SECTION_BEGIN("Long MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 50, 2, 400, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorteal ), ParamStyle("Style", styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+_SECTION_BEGIN("LLong MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 200, 2, 400, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorcustom16 ), ParamStyle("Style", styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+
+

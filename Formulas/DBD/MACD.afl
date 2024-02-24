@@ -1,0 +1,19 @@
+_SECTION_BEGIN("MACD");
+r1 = Param( "Fast avg", 12, 2, 200, 1 );
+r2 = Param( "Slow avg", 26, 2, 200, 1 );
+r3 = Param( "Signal avg", 9, 2, 200, 1 );
+Plot( ml = MACD(r1, r2), StrFormat(_SECTION_NAME()+"(%g,%g)", r1, r2), ParamColor("MACD color", colorCustom6 ), ParamStyle("MACD style") );
+Plot( sl = Signal(r1,r2,r3), "Signal" + _PARAM_VALUES(), ParamColor("Signal color", colorRed ), ParamStyle("Signal style") );
+Plot( ml-sl, "MACD Histogram", colorGreen, styleNoTitle | ParamStyle("Histogram style", styleHistogram | styleNoLabel, maskHistogram ) );
+
+Cover = Cross( ml, sl );
+Short = Cross( sl, ml );
+PlotShapes(IIf(Cover,shapeUpArrow,shapeNone) ,colorCustom12);
+PlotShapes(IIf(Short,shapeDownArrow,shapeNone),colorCustom12);
+
+Plot(ol = 0,"",ParamColor( "Color", colorCustom2 ), ParamStyle("Style"));
+Buy = Cross(ml, Ol );
+Sell = Cross(Ol, ml );
+PlotShapes(IIf(Buy,shapeUpArrow,shapeNone) ,colorCustom9);
+PlotShapes(IIf(Sell,shapeDownArrow,shapeNone),colorCustom9);
+_SECTION_END();

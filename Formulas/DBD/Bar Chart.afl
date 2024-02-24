@@ -1,0 +1,35 @@
+FormulaName = "Bar Chart";
+
+prev=AMA2(C,1,0);
+d=IIf(C>Ref(Max(Max(H,Ref(H,-3)),Max(Ref(H,-1),Ref(H,-2))),-1),Min(Min(L,Ref(L,-3)),Min(Ref(L,-1),Ref(L,-2))),
+IIf(C<Ref(Min(Min(L,Ref(L,-3)),Min(Ref(L,-1),Ref(L,-2))),-1),Max(Max(H,Ref(H,-3)),Max(Ref(H,-1),Ref(H,-2))),PREV));
+a=Cross(Close,d);
+b=Cross(d,Close);
+state=IIf(BarsSince(a)<BarsSince(b),1,0);
+s=state>Ref(state,-1);
+ss=state<Ref(state,-1);
+sss=state==Ref(state,-1);
+
+col=IIf(state == 1 ,8,IIf(state ==0,4,1));
+
+Plot(C,"",Col,128|styleThick);
+
+Plot(WMA( C, 20 ),"WMA20",colorGreen,styleLine);
+Plot(WMA( C, 50 ),"WMA50",colorCustom14,styleLine|styleThick);
+Plot(WMA( C, 200 ),"WMA200",colorCustom9,styleThick);
+
+_SECTION_BEGIN("Bollinger Bands");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 20, 2, 300, 1 );
+Width = Param("Width", 2, 0, 10, 0.05 );
+Color = ParamColor("Color", colorCustom1 );
+Style = ParamStyle("Style");
+Plot( BBandTop( P, Periods, Width ), "BBTop" + _PARAM_VALUES(), Color, style ); 
+Plot( BBandBot( P, Periods, Width ), "BBBot" + _PARAM_VALUES(), Color, Style ); 
+_SECTION_END();
+
+_SECTION_BEGIN("SAR");
+acc = Param("Acceleration", 0.02, 0, 1, 0.001 );
+accm = Param("Max. acceleration", 0.2, 0, 1, 0.001 );
+Plot( SAR( acc, accm ), _DEFAULT_NAME(), ParamColor( "Color", colorGrey50 ), ParamStyle("Style", styleDots | styleNoLine, maskDefault | styleDots | styleNoLine ) );
+_SECTION_END();

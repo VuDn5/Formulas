@@ -1,0 +1,6 @@
+_SECTION_BEGIN("VNIndex Volume");
+Ticker = ParamStr("Symbol", "VNINDEX" );
+upcol = Foreign(Ticker,"Close") - Ref(Foreign(Ticker,"Close"),-1);
+kol = IIf(upcol > 0, colorLime, colorOrange);
+Plot( Foreign(Ticker,"volume"), _DEFAULT_NAME(), kol , ParamStyle( "Style", styleHistogram | styleThick, maskHistogram  ) );
+_SECTION_END();

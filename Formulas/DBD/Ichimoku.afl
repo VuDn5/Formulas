@@ -1,0 +1,115 @@
+////ICHIMOKU CHART////
+//////////////////////////////
+
+ValueY = LowestVisibleValue(L);
+_SECTION_BEGIN("Ichimuko Time Series Reserver");
+function DrawSeriesReserver( start, series, Color )
+{
+	x = BarsSince( start );
+	result = 0;
+	for( i = 0; ( bar = StrToNum( StrExtract( series, i ) ) ) != 0; i++ )
+	{
+		result += x == (52-bar);
+		ValueX = SelectedValue(BarIndex()+1-51)+(52-bar);
+		PlotText("-"+bar,valueX,ValueY ,Color );
+
+	}
+	Plot( result, "", Color, styleHistogram|styleOwnScale|styleNoLabel|styleDashed , 0, 1 );
+}
+IchiSeries = "9,26,52";
+bi = BarIndex();
+start = bi == SelectedValue( bi - 52 );
+DrawSeriesReserver( start, IchiSeries, ParamColor( "Line", colorLightGrey)  );
+_SECTION_END();
+_SECTION_BEGIN("Ichimuko Time Series");
+function DrawSeries( start, series, Color )
+{
+	x = BarsSince( start );
+	result = 0;
+	for( i = 0; ( bar = StrToNum( StrExtract( series, i ) ) ) != 0; i++ )
+	{
+		result += x == bar;
+		ValueX = SelectedValue(BarIndex()+1)+bar;
+		PlotText(""+bar,ValueX,ValueY,Color );
+	}
+	Plot( result, "", Color, styleHistogram|styleOwnScale|styleNoLabel|styleDashed , 0,1 );
+}
+IchiSeries = "9,13,17,26,33,42,52,83,97";
+bi = BarIndex();
+start = bi == SelectedValue( bi-0);
+DrawSeries( start, IchiSeries, ParamColor( "Line", colorBlue)  );
+_SECTION_END();
+
+
+FormulaName = "Ichimoku";
+
+
+prev=AMA2(C,1,0);
+d=IIf(C>Ref(Max(Max(H,Ref(H,-3)),Max(Ref(H,-1),Ref(H,-2))),-1),Min(Min(L,Ref(L,-3)),Min(Ref(L,-1),Ref(L,-2))),
+IIf(C<Ref(Min(Min(L,Ref(L,-3)),Min(Ref(L,-1),Ref(L,-2))),-1),Max(Max(H,Ref(H,-3)),Max(Ref(H,-1),Ref(H,-2))),PREV));
+a=Cross(Close,d);
+b=Cross(d,Close);
+state=IIf(BarsSince(a)<BarsSince(b),1,0);
+s=state>Ref(state,-1);
+ss=state<Ref(state,-1);
+sss=state==Ref(state,-1);
+
+col=IIf(state == 1 ,8,IIf(state ==0,4,1));
+
+Plot(C,"",Col,128|styleThick);
+
+Filter = s OR sss OR sss ;
+AddColumn(C,"close",1.2);
+AddColumn( IIf( s, 66,1 ), "buy", formatChar, 1, bkcolor =IIf (s,colorGreen, colorRed ));
+AddColumn( IIf( Ss, 83,1 ), "sell", formatChar, 1, bkcolor =IIf (Ss,colorRed, colorGreen ));
+AddColumn( IIf( sss, 87,1 ), "wait", formatChar, 1, bkcolor =IIf (sss,colorYellow, colorRed ));
+
+/*******************************************************************************************/
+
+
+	#pragma nocache
+	#include_once  <\PEInc\PatternExplorer_f0.afl>
+	#include_once "C:\Program Files\AmiBroker\Formulas\PatternExplorer\#Defaults & Mods\PE - Mods.afl"
+	/*******************************************************************************************/
+	_SECTION_BEGIN("Main Parameters");
+	p1 = Param("Turning Line",9,5,20,1);//also known as Kijun Sen
+	p2 = Param("Standard Line",26,5,40,1);//also known as Tenkan Sen
+	p3 = Param("Delayed Line",26,0,40,1);//also known as Chikou Span
+	p4 = Param("Cloud F-Bars",26,0,40,1);//also known as Chikou Span
+
+		_SECTION_END();
+	/*******************************************************************************************/
+	_SECTION_BEGIN("Styles");
+	TLstyle = ParamStyle("Turning Line",styleThick);
+	SLstyle = ParamStyle("Standard Line",styleThick);
+	DLstyle = ParamStyle("Delayed Line",styleThick);
+	_SECTION_END();
+	/*******************************************************************************************/
+	GraphZOrder = 0;
+	AddICHIMOKU2(p1,p2,p3,p4);
+	HSB = 0;
+	/*******************************************************************************************/
+	
+	_SECTION_BEGIN("Colors");
+	TLcolor = ParamColor("Turning Line",colorCustom7);
+	SLcolor = ParamColor("Standard Line",colorCustom10);
+	DLcolor = ParamColor("Delayed Line",colorCustom11);
+	Cloud1color = ParamColor("Cloud 1",colorTeal);
+	Cloud2color = ParamColor("Cloud 2",colorYellow);
+	_SECTION_END();
+				_SECTION_BEGIN("Lines");
+// simple trading system
+Buy = Cross( TL, SL );
+Sell = Cross( SL, TL );
+PlotShapes( shapeUpArrow * Buy, colorYellow, 0, HaLow );
+PlotShapes( shapeDownArrow * Sell, colorPink, 0, HaHigh );
+
+	Plot(TL, "TL", TLcolor,TLstyle);
+	Plot(SL, "SL", SLcolor,SLstyle);
+	Plot(DL, "DL", DLcolor,DLstyle);
+	PlotOHLC( 0, SpanA_ahead, SpanB_ahead, SpanB_ahead, "Cloud", IIf(SpanA_ahead>SpanB_ahead,Cloud1color,Cloud2color), styleCloud+styleNoTitle+styleNoLabel,Null,Null,p4 );
+
+	
+	/*******************************************************************************************/
+		Title = "Ichimoku"+ " - "  +  EncodeColor(colorGreen)+ Name()+" - Date : "+
+Date() + " - " +" O ="+WriteVal(O)+", H ="+WriteVal(H)+", L ="+WriteVal(L)+", C ="+WriteVal(C)+" Volume : "+WriteVal(V);

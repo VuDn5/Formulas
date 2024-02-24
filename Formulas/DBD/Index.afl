@@ -1,0 +1,13 @@
+_SECTION_BEGIN("Compare 2 Stocks");
+
+
+Ticker = ParamStr("Symbol", "VNINDEX" );
+upcol = Foreign(Ticker,"Close") - Ref(Foreign(Ticker,"Close"),-1);
+kol = IIf(upcol > 0, colorLime, colorOrange);
+PlotOHLC(Foreign(Ticker,"Open"), Foreign(Ticker,"High"), Foreign(Ticker,"Low"), Foreign(Ticker,"Close"),"Ticker", kol, ParamStyle("Style", styleCandle)|styleOwnScale);
+Title = " WW - " + EncodeColor(colorBlue) + FullName() + " - Date: " + Date() + " - O: " + O + " - H: " + H + " - L: " + L + " - C: " + C + " ( " +
+(C - Ref(C,-1)) + " ) V: " + V + EncodeColor(colorWhite) + "\n vs: " + EncodeColor(colorRed) + Ticker + " - O: " + Foreign(Ticker,"Open")
++ " - H: " + Foreign(Ticker,"High") + " - L: " + Foreign(Ticker,"Low")+ " - C: " + Foreign(Ticker,"Close") + " - Vol: " + Foreign(Ticker,"Volume");
+
+SetChartBkGradientFill( ParamColor("Top Color", colorWhite),ParamColor("Bottom Color", colorWhite));
+_SECTION_END();

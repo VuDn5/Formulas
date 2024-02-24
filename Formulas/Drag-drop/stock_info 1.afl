@@ -1,0 +1,104 @@
+_SECTION_BEGIN("Price");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) Vol " +WriteVal( V, 1.0 ) +" {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 )) ));
+Plot( C, "Close", ParamColor("Color", colorDefault ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+_SECTION_END();
+
+//...................................................................................................................................................................................... T�n Co Phieu
+
+//...................................................................................................................................................................................... Thong tin  Co Phieu
+
+//...................................................................................................................................................................................... T�n Co Phieu
+
+_SECTION_BEGIN("Chi so tai chinh");
+FS=25;////////////////////////FS=Param("Font Size",25,11,100,1);
+GfxSetTextColor( ParamColor("Color",colorCustom12) );
+GfxSetBkMode(0);  
+Hor=Param("Horizontal Position",20,1,1200,1);
+Ver=Param("Vertical Position",1,1,1,1);
+GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );/////GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );
+GfxTextOut(Name()  +" -- " + fullName(), Hor+10, Ver+55 ); //"CHI SO TAI CHINH:";//GfxTextOut("CHI SO TAI CHINH:", Hor+10, Ver+55 );
+
+_SECTION_END();
+
+//...................................................................................................................................................................................... Thong tin  Co Phieu
+_SECTION_BEGIN("Chi so tai chinh");
+FS=25;////////////////////////FS=Param("Font Size",25,11,100,1);
+GfxSetBkMode(0);  
+Hor=Param("Horizontal Position",20,1,1200,1);
+Ver=Param("Vertical Position",1,1,1,1);
+GfxSelectFont("Times New Roman", 10, 600, bold =True, underline = False, True );/////GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );
+GfxSetTextColor(colorCustom12 );//GfxSetTextColor( ParamColor("Color",colorBlack) );
+GfxSetBkMode(0);   ////////////////////////////////////////////////////////////GfxSetBkMode( colorWhite);
+GfxTextOut("Gia tri P/E: " + Prec( (Close/GetFnData( "EPS" )),2), Hor+10, Ver+85 );
+GfxTextOut("Gia tri EPS: " + Prec( GetFnData( "EPS" ),2), Hor+10, Ver+100 );
+GfxTextOut("Gia tri P/S: " + Prec( Close / GetFnData( "SalesPerShare" ),2), Hor+10, Ver+115 );
+GfxTextOut("Gia tri P/B: " + Prec(  Close / GetFnData( "BookValuePerShare" ),2), Hor+10, Ver+130 );
+GfxTextOut("Gia tri So sach: " + Prec(  GetFnData( "BookValuePerShare" ),2), Hor+10, Ver+145 );
+GfxTextOut("Doanh thu tren 1 co phan: " + Prec(  GetFnData( "SalesPerShare" ),2), Hor+10, Ver+160 );
+GfxTextOut("Gia tri ROE: " + Prec(  GetFnData( "ReturnOnEquity" ),2), Hor+10, Ver+175 );
+GfxTextOut("Gia tri ROA: " + Prec(  GetFnData( "ReturnOnAssets" ),2), Hor+10, Ver+190 );
+GfxTextOut("Thi truong: " + MarketID(1), Hor+10, Ver+205 );
+GfxTextOut("Linh vuc: " + SectorID(1), Hor+10, Ver+220 );
+GfxTextOut("Nhom nganh: " + GetFnData("Country"), Hor+10, Ver+235 );
+
+_SECTION_END();
+
+_SECTION_BEGIN("Price");
+SetChartOptions(0,chartShowDates|chartShowArrows|chartLogarithmic|chartWrapTitle);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) Vol " +WriteVal( V, 1.0 ) +" {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 )) ));
+ 
+Plot( C, "", IIf(Close > Open, colorGreen, colorRed), styleBar + styleNoLabel);
+_SECTION_END();
+function T3(price,periods) //AMA-based
+{
+    s = 0.618;
+    periods = 2/(periods+1);
+    e1=AMA(price,periods);
+    e2=AMA(e1,Periods);
+    e3=AMA(e2,Periods);
+    e4=AMA(e3,Periods);
+    e5=AMA(e4,Periods);
+    e6=AMA(e5,Periods);
+    c1=-s*s*s;
+    c2=3*s*s+3*s*s*s;
+    c3=-6*s*s-3*s-3*s*s*s;
+    c4=1+3*s+s*s*s+3*s*s;
+    Ti3=c1*e6+c2*e5+c3*e4+c4*e3;
+    return ti3;
+}
+ 
+//Ribbon
+//Ribbon
+uptrend=PDI()>MDI()AND Signal()<MACD();
+downtrend=MDI()>PDI()AND Signal()>MACD();
+Plot( 2, "",IIf( uptrend, colorGreen, IIf( downtrend, colorRed, 0 )), styleOwnScale|styleArea|styleNoLabel, -0.5, 100 );
+ 
+Plot(T3(C,3),"T3",colorTan,styleThick);
+Plot(T3(C,5),"T5",colorLime);
+ 
+BuyAlert = Cross (T3(C,3), T3(C,5));
+SellAlert = Cross (T3(C,5), T3(C,3));
+ 
+shape = BuyAlert * shapeHollowUpArrow + SellAlert * shapeHollowDownArrow;
+PlotShapes( shape, IIf( BuyAlert ,ColorRGB(210,0,210), colorPink ),0, IIf( BuyAlert , Low, High ) );
+ 
+GraphXSpace = 5;
+dist = 0.70*ATR(7);
+ 
+for( i = 0; i < BarCount; i++ )
+{
+if( Buyalert[i] ) PlotText( "", i, L[ i ]-dist[i], colorGreen ); 
+if( Sellalert[i] ) PlotText( "", i, H[ i ]+dist[i], colorRed ); }
+ 
+ 
+Buy = BuyAlert;
+Sell =  SellAlert; 
+ 
+Filter = Buy OR Sell;
+Filter = Volume > 50000;
+ 
+AddColumn(Buy, "Buy", 1);
+AddColumn(Sell, "Sell", 1);
+AddColumn(V, "Volume", 1);
+AddColumn(C, "Close", 1.2);

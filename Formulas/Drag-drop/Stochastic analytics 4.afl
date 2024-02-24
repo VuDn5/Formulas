@@ -1,0 +1,39 @@
+//===========================================================================
+
+
+_SECTION_BEGIN("Stochastic %P1");
+periods1 = Param( "Periods", 13, 1, 200, 1 );
+Ksmooth1 = Param( "%K avg", 8, 1, 200, 1 );
+Dsmooth1 = Param( "%D avg", 5, 1, 200, 1 );
+Plot( StochD( periods1 , Ksmooth1, DSmooth1 ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), styleThick );
+_SECTION_END();
+
+_SECTION_BEGIN("Stochastic %K1");
+periods1 = Param( "Periods", 13, 1, 200, 1 );
+Ksmooth1 = Param( "%K avg", 8, 1, 200, 1 );
+Plot( StochK( periods1 , Ksmooth1), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), styleThick );
+_SECTION_END();
+
+//Sell=Cross(StochD( periods1 , Ksmooth1, DSmooth1 ),StochK( periods1 , Ksmooth1)) ;
+Buy=Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 )) ;
+
+_SECTION_BEGIN("Stochastic %P");
+periods = Param( "Periods", 8, 1, 200, 1 );
+Ksmooth = Param( "%K avg", 5, 1, 200, 1 );
+Dsmooth = Param( "%D avg", 3, 1, 200, 1 );
+Plot( StochD( periods , Ksmooth, DSmooth ), _DEFAULT_NAME(), ParamColor( "Color", colorGreen ), ParamStyle("Style") );
+_SECTION_END();
+
+_SECTION_BEGIN("Stochastic %K");
+periods = Param( "Periods", 8, 1, 200, 1 );
+Ksmooth = Param( "%K avg", 5, 1, 200, 1 );
+Plot( StochK( periods , Ksmooth), _DEFAULT_NAME(), ParamColor( "Color", colorRed ), ParamStyle("Style") );
+
+_SECTION_END();
+//Sell=Cross(StochD( periods , Ksmooth, DSmooth ),StochK( periods , Ksmooth)) ;
+//#Buy=Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth )) ;
+
+
+
+Plot(80,"", colorBlue, styleThick |styleNoLabel);
+Plot(20,"", colorBlue, styleThick |styleNoLabel);

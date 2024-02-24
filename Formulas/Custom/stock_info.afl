@@ -1,0 +1,106 @@
+_SECTION_BEGIN("Price");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) Vol " +WriteVal( V, 1.0 ) +" {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 )) ));
+Plot( C, "Close", ParamColor("Color", colorDefault ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+_SECTION_END();
+
+_SECTION_BEGIN("MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 200, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style", styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+_SECTION_BEGIN("Mid MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 45, 2, 300, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style", styleHidden | styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+_SECTION_BEGIN("Long MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 100, 2, 400, 1 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style", styleHidden | styleLine | styleNoLabel ) | styleNoRescale ); 
+_SECTION_END();
+
+_SECTION_BEGIN("BBands");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 100, 1 );
+Width = Param("Width", 2, 0, 10, 0.05 );
+Color = ParamColor("Color", colorLightGrey );
+Color = ColorBlend( Color,  GetChartBkColor(), 0.5 );
+Style = ParamStyle("Style", styleLine | styleNoLabel ) | styleNoRescale;;
+Plot( bbt = BBandTop( P, Periods, Width ), "BBTop" + _PARAM_VALUES(), Color, Style ); 
+Plot( bbb = BBandBot( P, Periods, Width ), "BBBot" + _PARAM_VALUES(), Color, Style ); 
+PlotOHLC( bbt, bbt, bbb, bbb, "", ColorBlend( Color, GetChartBkColor(), 0.7 ), styleNoLabel | styleCloud | styleNoRescale, Null, Null, Null, -1 );
+_SECTION_END();
+
+ 
+//...................................................................................................................................................................................... T�n Co Phieu
+
+_SECTION_BEGIN("Chi so tai chinh");
+FS=25;////////////////////////FS=Param("Font Size",25,11,100,1);
+GfxSetTextColor( ParamColor("Color",colorCustom12) );
+GfxSetBkMode(0);  
+Hor=Param("Horizontal Position",20,1,1200,1);
+Ver=Param("Vertical Position",1,1,1,1);
+GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );/////GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );
+GfxTextOut(Name()  +" -- " + fullName(), Hor+10, Ver+55 ); //"CHI SO TAI CHINH:";//GfxTextOut("CHI SO TAI CHINH:", Hor+10, Ver+55 );
+
+_SECTION_END();
+
+//...................................................................................................................................................................................... Thong tin  Co Phieu
+_SECTION_BEGIN("Chi so tai chinh");
+FS=25;////////////////////////FS=Param("Font Size",25,11,100,1);
+GfxSetBkMode(0);  
+Hor=Param("Horizontal Position",20,1,1200,1);
+Ver=Param("Vertical Position",1,1,1,1);
+GfxSelectFont("Times New Roman", 10, 600, bold =True, underline = False, True );/////GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );
+GfxSetTextColor(colorCustom12 );//GfxSetTextColor( ParamColor("Color",colorBlack) );
+GfxSetBkMode(0);   ////////////////////////////////////////////////////////////GfxSetBkMode( colorWhite);
+GfxTextOut("Gia tri P/E: " + Prec( (Close/GetFnData( "EPS" )),2), Hor+10, Ver+85 );
+GfxTextOut("Gia tri EPS: " + Prec( GetFnData( "EPS" ),2), Hor+10, Ver+100 );
+GfxTextOut("Gia tri P/S: " + Prec( Close / GetFnData( "SalesPerShare" ),2), Hor+10, Ver+115 );
+GfxTextOut("Gia tri P/B: " + Prec(  Close / GetFnData( "BookValuePerShare" ),2), Hor+10, Ver+130 );
+GfxTextOut("Gia tri So sach: " + Prec(  GetFnData( "BookValuePerShare" ),2), Hor+10, Ver+145 );
+GfxTextOut("Doanh thu tren 1 co phan: " + Prec(  GetFnData( "SalesPerShare" ),2), Hor+10, Ver+160 );
+GfxTextOut("Gia tri ROE: " + Prec(  GetFnData( "ReturnOnEquity" ),2), Hor+10, Ver+175 );
+GfxTextOut("Gia tri ROA: " + Prec(  GetFnData( "ReturnOnAssets" ),2), Hor+10, Ver+190 );
+GfxTextOut("Thi truong: " + MarketID(1), Hor+10, Ver+205 );
+GfxTextOut("Linh vuc: " + SectorID(1), Hor+10, Ver+220 );
+GfxTextOut("Nhom nganh: " + GetFnData("Country"), Hor+10, Ver+235 );
+
+_SECTION_END();
+
+_SECTION_BEGIN("Magnified Market Price");
+FS=Param("Font Size",35,11,100,1);//////////////////////////////////////////////////////////////  FS=Param("Font Size",35,11,100,1);
+GfxSetTextColor( ParamColor("Color",colorCustom9) );
+GfxSelectFont("Times New Roman", 25, 700, italic = True, underline = False, True );/////////////////GfxSelectFont("Times New Roman", 28, 700, italic = True, underline = False, True );
+GfxSetBkMode(0);  //////////////////////////////////////////////GfxSetBkMode( colorWhite );
+GfxSetTextColor( ParamColor("Color",colorYellow) );
+FS=30;//////////////////////////////////////////////////////////////  FS=Param("Font Size",35,11,100,1);
+Hor=Param("Horizontal Position",220,1,1200,1);
+Ver=Param("Vertical Position",1,1,1,1);
+
+//...................................................................................................................................................................................... % thay doi Gia  Co Phieu
+GfxTextOut(""+C,Hor + 10 , Ver+15 );////////////////////////////////////////////////////  GfxTextOut(""+C,Hor-50 , Ver+15 );
+GfxTextOut( Name(), Hor,Ver-50 );
+YC=TimeFrameGetPrice("C",inDaily,-1);
+DD=Prec(C-YC,2);
+xx=Prec((DD/YC)*100,2);
+GfxSelectFont("Times New Roman", 15, 700, italic =True, underline = False, True );//////////////////////////// 10
+FS=10;
+GfxSetBkMode( colorWhite );
+//Plot(C,"",IIf(C>Ref(C,-1),colorCustom9,colorRed),styleCandle);
+
+GfxSetTextColor(ParamColor("Color",colorCustom9) );
+GfxTextOut(""+DD+" ("+xx+"%)", Hor +90, Ver+15 );/////////////////// GfxTextOut(""+DD+" ("+xx+"%)", Hor-50, Ver+15 );
+GfxSelectFont("arial", 18 );////////////////////////////////////////////////////////////////////////////////// 18
+
+//..................................................................................................................................................................................................... Ten Bo Loc
+GfxSetTextColor(ParamColor("dong",colorCustom8) );
+GfxSetTextAlign( 0 );// center alignment //GfxSetTextAlign( 6 );
+GfxSetTextColor( ColorRGB( 255, 255, 0 ) );
+GfxSetBkMode(0); // transparent
+GfxSelectFont("UVN But Long 1", Status("pxheight")/30 ); //////GfxSelectFont("UVN But Long 1", Status("pxheight")/45 );
+GfxSelectFont("UVN But Long 1", Status("pxheight")/45 );
+_SECTION_END();
