@@ -1,5 +1,8 @@
-_SECTION_BEGIN("Price");
-SetChartOptions(0,chartShowArrows);
+SetChartOptions(0,chartShowArrows | chartShowDates);
 _N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 ) ) ));
-Plot( C, "Close", ParamColor("Color", colorDefault ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+_SECTION_BEGIN("MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 10, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorRed ), ParamStyle("Style") ); 
 _SECTION_END();
+Plot( C, "Close", ParamColor("Color", colorDefault ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 

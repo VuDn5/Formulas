@@ -6,9 +6,3 @@ haOpen = AMA( Ref( haClose, -1 ), 0.5 );
 haColor = IIf( haClose > haOpen, colorGreen, colorRed );
 Plot( haClose, "Heiken Ashi", haColor, styleCandle );
 _SECTION_END();
-
-_SECTION_BEGIN("MA1");
-P = ParamField("Price field",-1);
-Periods = Param("Periods", 15, 2, 300, 1, 10 );
-Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
-_SECTION_END();

@@ -1,8 +1,0 @@
-// Downloaded From https://www.WiseStockTrader.com
-_SECTION_BEGIN("Price Chart");
-
-haClose = (O+H+L+C)/4;
-haOpen = AMA( Ref( haClose, -1 ), 0.5 );
-haColor = IIf( haClose > haOpen, colorGreen, colorRed );
-Plot( haClose, "Heiken Ashi", haColor, styleCandle );
-_SECTION_END();
