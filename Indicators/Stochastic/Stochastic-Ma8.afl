@@ -1,0 +1,18 @@
+_SECTION_BEGIN("Stochastic %D");
+Stoperiods = Param( "Periods", 13, 1, 200, 1 );
+Ksmooth = Param( "%K avg", 8, 1, 200, 1 );
+Dsmooth = Param( "%D avg", 5, 1, 200, 1 );
+Plot( StochD( Stoperiods , Ksmooth, DSmooth ), _DEFAULT_NAME(), ParamColor( "Color", colorBlue ), ParamStyle("Style") );
+_SECTION_END();
+
+_SECTION_BEGIN("MA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 8, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorRed ), styleThick ); 
+_SECTION_END();
+
+Buy=(Cross( StochD( Stoperiods , Ksmooth, Dsmooth), MA( P, Periods )));
+
+Plot(80,"", colorBlack, styleThick |styleNoLabel);
+Plot(20,"", colorBlack, styleThick |styleNoLabel);
+
