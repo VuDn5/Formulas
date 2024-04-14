@@ -1,39 +1,32 @@
 //===========================================================================
-
 GfxSetTextColor( ParamColor("Color",colorCustom12) );
 GfxSetBkMode(0);  
 Hor=Param("Horizontal Position",20,1,1200,1);
 Ver=Param("Vertical Position",1,1,1,1);
 GfxSelectFont("Times New Roman", 12, 600, bold =True, underline = False, True );
-Histogram = True;
-FinalHistogram = True;
-
+//===========================================================================
 r1 = Param( "Fast avg", 12, 2, 200, 1 );
 r2 = Param( "Slow avg", 26, 2, 200, 1 );
 r3 = Param( "Signal avg", 9, 2, 200, 1 );
-
 ml = MACD(r1, r2);
 sl = Signal(r1,r2,r3);
 Hist = ml-sl;
-DrawHist = ml+sl;
-
 MACUP = Hist > Ref(Hist,-1);
 MACDN = Hist < Ref(Hist,-1);
-
 Historgram_trend_increase= NumToStr((Hist > Ref(Hist,-1)) AND (Ref(Hist,-1) > Ref(Hist,-2)) AND (Ref(Hist,-2) > Ref(Hist,-3)) AND (Ref(Hist,-3) > Ref(Hist,-4)) AND (Ref(Hist,-4) > Ref(Hist,-5)));
 Historgram_trend_increase_result = StrToNum(Historgram_trend_increase);
-BarColor  = IIf(MACUP,colorGreen,IIf(MACDN,colorRed,colorBlue));
-barToday =  NumToStr(BarIndex());
-
-//hist_today = NumToStr(Hist[StrToNum(barToday)]);
-//GfxTextOut(hist_today , Hor+10, Ver+55 );
-//GfxTextOut(barToday , Hor+120, Ver+55 );
-//GfxTextOut(NumToStr(FinalHistogram) , Hor+210, Ver+55 );
-//GfxTextOut(NumToStr((Hist[StrToNum(barToday)]) > ( Hist[StrToNum(barToday) -1])) , Hor+210, Ver+55 );
-Plot( Hist, "MACD Histogram", BarColor  , styleHistogram );
+GfxTextOut("Histogram MACD increase: " +Historgram_trend_increase_result , Hor+10, Ver+30);
+GfxTextOut("MACD increase: " +(Cross(ml, sl)) , Hor+10, Ver+50);
 Buy= Historgram_trend_increase_result;
+Buy= (Cross(ml, sl));
+//BarColor  = IIf(MACUP,colorGreen,IIf(MACDN,colorRed,colorBlue));
+//barToday =  NumToStr(BarIndex());
+//GfxTextOut(hist_today , Hor+10, Ver+55 );
+//GfxTextOut(NumToStr(FinalHistogram) , Hor+210, Ver+55 );
+//Plot( Hist, "MACD Histogram", BarColor  , styleHistogram );
 //shape = Hist[StrToNum(barToday)] * shapeHollowUpArrow;
 //PlotShapes( shape,colorPink ,0, Low );
+//===========================================================================
 
 _SECTION_BEGIN("Stochastic %P1");
 periods1 = Param( "Periods", 13, 1, 200, 1 );
@@ -49,7 +42,9 @@ Plot( StochK( periods1 , Ksmooth1), _DEFAULT_NAME(), ParamColor( "Color", colorC
 _SECTION_END();
 
 //Sell=Cross(StochD( periods1 , Ksmooth1, DSmooth1 ),StochK( periods1 , Ksmooth1)) ;
-//Buy=Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 ))  AND Cross(ml, sl) ;
+Buy=Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 ));
+GfxTextOut("Stochastic 13-8-5 increase: " + Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 )) , Hor+10, Ver+80 );
+//===========================================================================
 
 _SECTION_BEGIN("Stochastic %P");
 periods = Param( "Periods", 7, 1, 200, 1 );
@@ -62,15 +57,11 @@ _SECTION_BEGIN("Stochastic %K");
 periods = Param( "Periods", 7, 1, 200, 1 );
 Ksmooth = Param( "%K avg", 5, 1, 200, 1 );
 Plot( StochK( periods , Ksmooth), _DEFAULT_NAME(), ParamColor( "Color", colorRed ), ParamStyle("Style") );
-
 _SECTION_END();
 //Sell=Cross(StochD( periods , Ksmooth, DSmooth ),StochK( periods , Ksmooth)) ;
-
-//Buy= Historgram_trend_increase_result;
-Buy= (Cross(ml, sl));
-Buy= (Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 ))); 
 Buy=(Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth )));
+GfxTextOut("Stochastic 7-5-3 increase: " + (Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth ))) , Hor+10, Ver+120 );
+//===========================================================================
 
-GfxTextOut(NumToStr(Buy) , Hor+10, Ver+55 );
 Plot(80,"", colorBlue, styleThick |styleNoLabel);
 Plot(20,"", colorBlue, styleThick |styleNoLabel);
