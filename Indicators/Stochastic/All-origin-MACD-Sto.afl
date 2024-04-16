@@ -62,6 +62,7 @@ _SECTION_END();
 Buy=(Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth )));
 GfxTextOut("Stochastic 7-5-3 increase: " + (Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth ))) , Hor+10, Ver+120 );
 //===========================================================================
+// Vi the gia HA va MA10 
 
 Plot(80,"", colorBlue, styleThick |styleNoLabel);
 Plot(20,"", colorBlue, styleThick |styleNoLabel);
