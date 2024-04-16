@@ -15,10 +15,10 @@ MACUP = Hist > Ref(Hist,-1);
 MACDN = Hist < Ref(Hist,-1);
 Historgram_trend_increase= NumToStr((Hist > Ref(Hist,-1)) AND (Ref(Hist,-1) > Ref(Hist,-2)) AND (Ref(Hist,-2) > Ref(Hist,-3)) AND (Ref(Hist,-3) > Ref(Hist,-4)) AND (Ref(Hist,-4) > Ref(Hist,-5)));
 Historgram_trend_increase_result = StrToNum(Historgram_trend_increase);
-GfxTextOut("Histogram MACD increase: " +Historgram_trend_increase_result , Hor+10, Ver+30);
-GfxTextOut("MACD increase: " +(Cross(ml, sl)) , Hor+10, Ver+50);
 Buy= Historgram_trend_increase_result;
 Buy= (Cross(ml, sl));
+GfxTextOut("Histogram MACD increase: " +Historgram_trend_increase_result , Hor+10, Ver+30);
+GfxTextOut("MACD increase: " +(Cross(ml, sl)) , Hor+10, Ver+50);
 //BarColor  = IIf(MACUP,colorGreen,IIf(MACDN,colorRed,colorBlue));
 //barToday =  NumToStr(BarIndex());
 //GfxTextOut(hist_today , Hor+10, Ver+55 );
@@ -62,6 +62,7 @@ _SECTION_END();
 Buy=(Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth )));
 GfxTextOut("Stochastic 7-5-3 increase: " + (Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth ))) , Hor+10, Ver+120 );
 //===========================================================================
+// Vi the gia HA va MA10 
 
 Plot(80,"", colorBlue, styleThick |styleNoLabel);
 Plot(20,"", colorBlue, styleThick |styleNoLabel);
