@@ -43,7 +43,7 @@ _SECTION_END();
 
 //Sell=Cross(StochD( periods1 , Ksmooth1, DSmooth1 ),StochK( periods1 , Ksmooth1)) ;
 Buy=Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 ));
-GfxTextOut("Stochastic 13-13-5 increase: " + Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 )) , Hor+10, Ver+80 );
+GfxTextOut("Stochastic 13-8-5 increase: " + Cross(StochK( periods1 , Ksmooth1),StochD( periods1 , Ksmooth1, DSmooth1 )) , Hor+10, Ver+80 );
 //===========================================================================
 
 _SECTION_BEGIN("Stochastic %P");

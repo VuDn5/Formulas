@@ -1,0 +1,20 @@
+//===========================================================================
+
+_SECTION_BEGIN("Stochastic %P");
+periods = Param( "Periods", 7, 1, 200, 1 );
+Ksmooth = Param( "%K avg", 5, 1, 200, 1 );
+Dsmooth = Param( "%D avg", 3, 1, 200, 1 );
+Plot( StochD( periods , Ksmooth, DSmooth ), _DEFAULT_NAME(), ParamColor( "Color", colorGreen ), ParamStyle("Style") );
+_SECTION_END();
+
+_SECTION_BEGIN("Stochastic %K");
+periods = Param( "Periods", 7, 1, 200, 1 );
+Ksmooth = Param( "%K avg", 5, 1, 200, 1 );
+Plot( StochK( periods , Ksmooth), _DEFAULT_NAME(), ParamColor( "Color", colorRed ), ParamStyle("Style") );
+
+_SECTION_END();
+//Sell=Cross(StochD( periods , Ksmooth, DSmooth ),StochK( periods , Ksmooth)) ;
+Buy=Cross(StochK( periods , Ksmooth),StochD( periods , Ksmooth, DSmooth )) ;
+
+Plot(80,"", colorBlue, styleThick |styleNoLabel);
+Plot(20,"", colorBlue, styleThick |styleNoLabel);

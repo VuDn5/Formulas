@@ -1,0 +1,34 @@
+_SECTION_BEGIN("Price");
+SetChartOptions(0, chartShowArrows | chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue(ROC(C, 1))));
+
+P = ParamField("Price field", -1);
+
+// Ðu?ng MA3 (màu tím)
+Periods3 = Param("Periods for MA3", 3, 2, 300, 1, 3);
+MA3 = MA(P, Periods3);
+Plot(MA3, "MA3", colorViolet, styleLine | ParamStyle("MA3 Style"));
+
+// Ðu?ng MA5 (màu cam)
+Periods5 = Param("Periods for MA5", 5, 2, 300, 1, 5);
+MA5 = MA(P, Periods5);
+Plot(MA5, "MA5", colorOrange, styleLine | ParamStyle("MA5 Style"));
+
+// Ðu?ng MA10 (màu d?, ki?u d?m)
+Periods10 = Param("Periods for MA10", 10, 2, 300, 1, 10);
+MA10 = MA(P, Periods10);
+Plot(MA10, "MA10", colorRed, styleLine | styleThick | ParamStyle("MA10 Style"));
+
+// Ðu?ng MA20 (màu xanh)
+Periods20 = Param("Periods for MA20", 20, 2, 300, 1, 20);
+MA20 = MA(P, Periods20);
+Plot(MA20, "MA20", colorBlue, styleLine | ParamStyle("MA20 Style"));
+
+// Ðu?ng MA50 (màu xanh lá cây)
+Periods50 = Param("Periods for MA50", 50, 2, 300, 1, 50);
+MA50 = MA(P, Periods50);
+Plot(MA50, "MA50", colorBrightGreen, styleLine | ParamStyle("MA50 Style"));
+
+// Bi?u d? Close
+Plot(C, "Close", ParamColor("Color", colorDefault), styleNoTitle | ParamStyle("Style") | GetPriceStyle());
+_SECTION_END();
